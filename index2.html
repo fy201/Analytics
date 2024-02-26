@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Latitude-Longitude Scatter Plot</title>
+    <script src="libs/d3/d3.v7.min.js"></script>
+</head>
+<body>
+
+<script type="module">
+    let data = await d3.csv ('../data/MappingMuseumsData.csv', (d)=>{
+    return{
+        museum_name: d.museum_name,
+        museum_id: d.museum_id,
+        address_line_1: d.address_line_1,
+        address_line_2: d.address_line_2,
+        city: d.city,
+        postcode: d.postcode,
+        latitude: parseFloat(d.latitude),
+        longitude: parseFloat(d.longitude),
+        admin_area_full: d.admin_area_full,
+        admin_area_1: d.admin_area_1,
+        admin_area_2: d.admin_area_2,
+        admin_area_2_type: d.admin_area_2_type,
+        admin_area_3: d.admin_area_3,
+        admin_area_3_type: d.admin_area_3_type,
+        admin_area_4: d.admin_area_4,
+        admin_area_4_type: d.admin_area_4_type,
+        accreditation: d.accreditation,
+        governance_type: d.governance_type,
+        size: d.size,
+        governance_subtype: d.governance_subtype,
+        size_provenance: d.size_provenance,
+        subject_matter_full: d.subject_matter_full,
+        subject_matter: d.subject_matter,
+        subject_matter_subtype_1: d.subject_matter_subtype_1,
+        subject_matter_subtype_2: d.subject_matter_subtype_2,
+        year_opened_low: +d.year_opened_low,
+        year_opened_high: +d.year_opened_high,
+        year_closed_low: +d.year_closed_low,
+        year_closed_high: +d.year_closed_high,
+        data_primary_provenance: d.data_primary_provenance,
+        area_deprivation_index: +d.area_deprivation_index,
+        area_deprivation_index_crime: +d.area_deprivation_index_crime,
+        area_deprivation_index_education: +d.area_deprivation_index_education,
+        area_deprivation_index_employment: +d.area_deprivation_index_employment,
+        area_deprivation_index_health: +d.area_deprivation_index_health,
+        area_deprivation_index_housing: +d.area_deprivation_index_housing,
+        area_deprivation_index_income: +d.area_deprivation_index_income,
+        area_deprivation_index_services: +d.area_deprivation_index_services,
+        area_geodemographic_supergroup: d.area_geodemographic_supergroup,
+        area_geodemographic_group: d.area_geodemographic_group,
+        area_geodemographic_subgroup: d.area_geodemographic_subgroup,
+    
+    
+    }
+    
+    });
+
+    // Set up the SVG container
+    var width = 800;
+    var height = 600;
+
+    var svg = d3.select("body")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+    // Set up scales for latitude and longitude
+    var xScale = d3.scaleLinear()
+        .domain([d3.min(data, d => d.longitude), d3.max(data, d => d.longitude)])
+        .range([0, width]);
+
+    var yScale = d3.scaleLinear()
+        .domain([d3.min(data, d => d.latitude), d3.max(data, d => d.latitude)])
+        .range([height, 0]);
+
+    // Create circles for each data point
+    svg.selectAll("circle")
+        .data(data)
+        .enter().append("circle")
+        .attr("cx", d => xScale(d.longitude))
+        .attr("cy", d => yScale(d.latitude))
+        .attr("r", 5) // radius of the circle
+        .style("fill", d => getColor(d.governance_type)); // Color based on governance_type
+
+    // Add labels for axes
+    svg.append("text")
+        .attr("x", width / 2)
+        .attr("y", height + 30)
+        .attr("text-anchor", "middle")
+        .text("Longitude");
+
+    svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("x", -height / 2)
+        .attr("y", -40)
+        .attr("text-anchor", "middle")
+        .text("Latitude");
+
+    // Function to assign colors based on governance_type
+    function getColor(governance_type) {
+        switch (d.governance_type) {
+            case "independent":
+                return "blue";
+            case "government":
+                return "red";
+            case "university":
+                return "green";
+            case "unknown":
+                return "gray";
+            default:
+                return "black";
+        }
+    }
+</script>
+
+</body>
+</html>
