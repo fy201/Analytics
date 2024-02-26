@@ -14,4 +14,3 @@ Three analytics methods are implemented:
 `main.js` shows basic application of these methods on the faithful dataset (waiting time and duration of eruption for the Old Faithful geyser in Yellowstone National Park).
 
 Inspired by M. Bostock's examples: https://observablehq.com/@d3/kernel-density-estimation; https://observablehq.com/@mbostock/linear-regression.
- i am cool
